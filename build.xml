@@ -1,8 +1,9 @@
-<project name="Percolation" basedir="." default="compile">
+<project name="Percolation" basedir="." default="main">
   <!-- Variables -->
   <property name="lib.dir" value="lib"/>
   <property name="build.dir" value="build"/>
   <property name="src.dir" value="src"/>
+  <property name="main" value="Percolation"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -18,10 +19,23 @@
   <target name="compile">
     <mkdir dir="${build.dir}"/>
     <javac 
-      includeantruntime="false"
+      includeantruntime="true"
       srcdir="${src.dir}"
       destdir="${build.dir}"
       classpathref="classpath"
       />
   </target>
+
+  <target name="run" depends="compile">
+    <java classname="${main}">
+      <classpath>
+        <path refid="classpath"/>
+        <path location="${build.dir}"/>
+      </classpath>
+    </java>
+  </target>
+
+  <target name="main" depends="clean, compile, run">
+  </target>
+
 </project>
