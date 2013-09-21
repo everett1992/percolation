@@ -1,10 +1,10 @@
 public class Percolation {
 
-  private QuickUnionUf matrix;
+  private QuickUnionUF matrix;
 
   // create N-by-N grid, with all sites blocked
   public Percolation(int N) {
-    matrix = new QuickUnionUf(N);
+    matrix = new QuickUnionUF(N);
   }
 
   // open site (row i, col j) if it is not already
