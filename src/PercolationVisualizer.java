@@ -9,6 +9,7 @@
 //   drawn in white
 
 import java.awt.Color;
+import java.util.NoSuchElementException;
 
 public class PercolationVisualizer {
 
@@ -21,6 +22,9 @@ public class PercolationVisualizer {
   }
 
   public void draw(Percolation perc) throws InterruptedException {
+    draw(perc, 0);
+  }
+  public void draw(Percolation perc, int wait) throws InterruptedException {
     int n = perc.size();
 
     draw.clear();
@@ -41,8 +45,12 @@ public class PercolationVisualizer {
         }
       }
     }
-    draw.show(0);
+    draw.show(wait);
 
+    //wait_for_keypress();
+  }
+
+  private void wait_for_keypress() throws InterruptedException {
     // wait for any key press
     do {
       // clear other presses
@@ -71,17 +79,32 @@ public class PercolationVisualizer {
   }
 
   public static void main(String[] args) throws InterruptedException {
-    int n = 100;
+
+    int n = StdIn.readInt();
+
     PercolationVisualizer viz = new PercolationVisualizer();
     Percolation perc = new Percolation(n);
 
     viz.draw(perc);
-    for (int i = 0; i < perc.size(); i++) {
-      for (int j = 0; j < 10; j++) {
+
+    try {
+      while (!StdIn.isEmpty()) {
+        // read integers from standard in
+        int i = StdIn.readInt();
+        int j = StdIn.readInt();
+
+        // open the cell
         perc.open(i,j);
+
+
+        // draw the percolation matrix
+        viz.draw(perc, 50);
       }
+    } catch (NoSuchElementException ex) {
+      System.err.println("Unexpectantly Reached end of input while proccessing a cell");
     }
-    viz.draw(perc);
+
+    viz.wait_for_keypress();
 
     System.exit(0);
 
