@@ -3,7 +3,7 @@
   <property name="lib.dir" value="lib"/>
   <property name="build.dir" value="build"/>
   <property name="src.dir" value="src"/>
-  <property name="main" value="Percolation"/>
+  <property name="visualizer" value="PercolationVisualizer"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -26,8 +26,8 @@
       />
   </target>
 
-  <target name="run" depends="compile">
-    <java classname="${main}">
+  <target name="visualizer" depends="compile">
+    <java classname="${visualizer}">
       <classpath>
         <path refid="classpath"/>
         <path location="${build.dir}"/>
@@ -35,7 +35,7 @@
     </java>
   </target>
 
-  <target name="main" depends="clean, compile, run">
+  <target name="main" depends="clean, compile">
   </target>
 
 </project>

@@ -1,10 +1,20 @@
-import java.util.LinkedList;
-import java.lang.Math;
+// Caleb Everett   22/09/13
+// TCNJ          Algorithms
+//
+// Percolation class checks if an NxN grid of open or closed cells
+// has a path of adjacent open cells from the top row to the bottom row.
 
 public class Percolation {
 
+  // Maximum size of gird.
+  // Union datastructure cannot handle more than MAX INT
+  // cells so the grid must be less than sqrt MAX INT on each size
+  private static int MAX_SIZE = (int)Math.sqrt(Integer.MAX_VALUE);
+
+  // Error message when grid is too large
   private static String GRID_OVERSIZE_MESSAGE =
-      "Grid too large, N must be less than " + Math.sqrt(Integer.MAX_VALUE);
+      "Grid too large, N must be less than " + MAX_SIZE;
+
 
   // Tracks which cells are connected
   private QuickUnionUF union;
@@ -20,42 +30,40 @@ public class Percolation {
 
     // N will be doubled, so if n > sqrt(MAX_INT)
     // there would be an overflow.
-    if (N > (int)Math.sqrt(Integer.MAX_VALUE)) {
+    if (N > MAX_SIZE) {
       throw new RuntimeException(GRID_OVERSIZE_MESSAGE);
     }
 
-
     cells = new boolean[N][N];
-
 
     // Create a union data structure with N^2 + 2 seperate groups
     // Cell second to last cell is the virtual top, and last cell is the virtual bottom
     int num_cells = (int)Math.pow(N, 2);
-    union = new QuickUnionUF(num_cells + 2);
+    union = new QuickUnionUF(num_cells);
 
     // Join the top row of cells to the virtual top
-    virt_bottom = num_cells + 1;
-    for (int i = 0; i < N; i++) {
-      union.union(idx(i, N - 1), virt_bottom);
-    }
-
-    // Join the bottom row of cells to the virtual bottom
-    virt_top = num_cells;
+    virt_top = 0; // virt top can be any cell from the top row of cells
     for (int i = 0; i < N; i++) {
       union.union(idx(i, 0), virt_top);
     }
 
-    if (Globals.verbose) {
-      System.out.printf("created %d x %<d grid%n", N);
+    // Join the bottom row of cells to the virtual bottom
+    virt_bottom = num_cells - 1; // virt bottmo can be any cell from the bottom row of cells
+    for (int i = 0; i < N; i++) {
+      union.union(idx(i, N - 1), virt_bottom);
     }
+  }
 
+  // returns the size of the gird
+  public int size() {
+    return cells.length;
   }
 
   // open site (row i, col j) if it is not already
   public void open(int i, int j) {
     if (!valid_coord(i, j)) {
       throw new RuntimeException(String.format("cell %d, %d out of bounds", i, j));
-    } else if (cells[i][j] != true) {
+    } else {
       cells[i][j] = true;
 
       int[][] adj_cells = {
@@ -69,10 +77,6 @@ public class Percolation {
         if (is_open(cell[0], cell[1])) {
           union.union(idx(i, j), idx(cell[0], cell[1]));
         }
-      }
-    } else {
-      if (Globals.verbose) {
-        System.out.printf("Cell %d, %d is already open%n", i, j);
       }
     }
   }
@@ -92,62 +96,17 @@ public class Percolation {
     return union.connected(virt_top, virt_bottom);
   }
 
-  public void print() {
-    for (int j = 0; j < cells[0].length; j++) {
-      // for each row  (i) in each column (j)
-      for (int i = 0; i < cells.length; i++) {
-        if (is_full(i,j)) {
-          System.out.print("f");
-        }
-        else if (is_open(i,j)) {
-          System.out.print(" ");
-        }
-        else {
-          System.out.print("X");
-        }
-      }
-      System.out.print("\n");
-    }
-
-    if (percolates()) {
-      System.out.println("The matrix percolates!");
-    }
-  }
-
+  // return false if the coordinates are outside of the grid
   private boolean valid_coord(int i, int j) {
     return (i >= 0 && i < cells.length && j >= 0 && j < cells[i].length);
   }
 
+  // map a 2d coordinate to a 1d index to pass to the union object
   private int idx(int i, int j) {
     if (!valid_coord(i, j)) {
       throw new RuntimeException(String.format("cell %d, %d out of bounds", i, j));
     }
     int idx = i + j * cells[i].length;
     return idx;
-  }
-
-  public static void main(String[] args) {
-    int n = 4;
-    Percolation perc = new Percolation(n);
-    int[][] cells = {
-      {0,0},
-      {0,2},
-      {0,3},
-      {0,1},
-    };
-
-    perc.print();
-
-    for (int[] cell : cells) {
-      int i = cell[0];
-      int j = cell[1];
-
-      perc.open(i,j);
-      System.out.println(String.format("%d, %d: opened", i, j));
-      System.out.println(String.format("%d, %d: %s", i, j, (perc.is_full(i, j) ? "full" : "empty")));
-
-      perc.print();
-    }
-
   }
 }
