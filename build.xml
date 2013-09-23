@@ -4,6 +4,7 @@
   <property name="build.dir" value="build"/>
   <property name="src.dir" value="src"/>
   <property name="visualizer" value="PercolationVisualizer"/>
+  <property name="stats" value="PercolationStats"/>
 
   <path id="classpath">
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
@@ -32,6 +33,17 @@
         <path refid="classpath"/>
         <path location="${build.dir}"/>
       </classpath>
+    </java>
+  </target>
+
+  <target name="stats" depends="compile">
+    <java classname="${stats}">
+      <classpath>
+        <path refid="classpath"/>
+        <path location="${build.dir}"/>
+      </classpath>
+      <arg value="${t}"/>
+      <arg value="${n}"/>
     </java>
   </target>
 

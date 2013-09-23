@@ -21,10 +21,10 @@ public class PercolationVisualizer {
     draw.show(0);
   }
 
-  public void draw(Percolation perc) throws InterruptedException {
+  public void draw(Percolation perc) {
     draw(perc, 0);
   }
-  public void draw(Percolation perc, int wait) throws InterruptedException {
+  public void draw(Percolation perc, int wait) {
     int n = perc.size();
 
     draw.clear();
@@ -50,15 +50,6 @@ public class PercolationVisualizer {
     //wait_for_keypress();
   }
 
-  private void wait_for_keypress() throws InterruptedException {
-    // wait for any key press
-    do {
-      // clear other presses
-      while (draw.hasNextKeyTyped()) { draw.nextKeyTyped(); }
-      Thread.sleep(100);
-    } while (!draw.hasNextKeyTyped());
-  }
-
   private void draw_cell(int i, int j, Color color) {
     draw.setPenColor(color);
     draw.filledSquare(((double) i) + 1.5, ((double) j) + 1.5, 0.5);
@@ -78,7 +69,7 @@ public class PercolationVisualizer {
     draw_cell(i, j, Draw.BLACK);
   }
 
-  public static void main(String[] args) throws InterruptedException {
+  public static void main(String[] args) {
 
     int n = StdIn.readInt();
 
@@ -103,8 +94,6 @@ public class PercolationVisualizer {
     } catch (NoSuchElementException ex) {
       System.err.println("Unexpectantly Reached end of input while proccessing a cell");
     }
-
-    viz.wait_for_keypress();
 
     System.exit(0);
 

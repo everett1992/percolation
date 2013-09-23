@@ -4,14 +4,24 @@ Caleb Everett
 TCNJ Fall 2013
 
 Dependencies:
-  This should only depend on the jdk and apache-ant
+  - jdk
+  - apache-ant (build)
+  - ruby (visualizer script)
 
-Compile:
+## Percolation visualizer:
 ```
-  $ ant compile
+  $ ant visualizer
+```
+or
+```
+  $ ./input.rb | ant visualizer
+```
+or
+```
+  $ ant visualizer < file.txt
 ```
 
-Run:
+## Percolation Stats:
 ```
-  $ ant run
+  $ ant stats -Dn=250 -Dt=20
 ```
