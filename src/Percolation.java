@@ -25,6 +25,8 @@ public class Percolation {
   private int virt_top;
   private int virt_bottom;
 
+  private final int size;
+
   // create N-by-N grid, with all sites blocked
   public Percolation(int N) {
 
@@ -35,6 +37,7 @@ public class Percolation {
     }
 
     cells = new boolean[N][N];
+    size = N;
 
     // Create a union data structure with N^2 + 2 seperate groups
     // Cell second to last cell is the virtual top, and last cell is the virtual bottom
@@ -50,13 +53,13 @@ public class Percolation {
     // Join the bottom row of cells to the virtual bottom
     virt_bottom = num_cells - 1; // virt bottom can be any cell from the bottom row of cells
     for (int i = 0; i < N; i++) {
-      union.union(idx(i, N - 1), virt_bottom);
+      union.union(idx(i, size - 1), virt_bottom);
     }
   }
 
   // returns the size of the gird
   public int size() {
-    return cells.length;
+    return size;
   }
 
   // open site (row i, col j) if it is not already
@@ -93,12 +96,15 @@ public class Percolation {
 
   // does the system percolate?
   public boolean percolates() {
+    // If the grid is 1 x 1 virt top and bottom are the same cell,
+    // so they are in the same group so make sure the cell 0,0 is open.
+    if (size == 1) { return is_open(0, 0); }
     return union.connected(virt_top, virt_bottom);
   }
 
   // return false if the coordinates are outside of the grid
   private boolean valid_coord(int i, int j) {
-    return (i >= 0 && i < cells.length && j >= 0 && j < cells[i].length);
+    return (i >= 0 && i < size && j >= 0 && j < size);
   }
 
   // map a 2d coordinate to a 1d index to pass to the union object
@@ -106,7 +112,7 @@ public class Percolation {
     if (!valid_coord(i, j)) {
       throw new RuntimeException(String.format("cell %d, %d out of bounds", i, j));
     }
-    int idx = i + j * cells[i].length;
+    int idx = i + j * size;
     return idx;
   }
 }

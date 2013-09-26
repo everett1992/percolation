@@ -25,7 +25,7 @@ public class PercolationVisualizer {
 
     matrix = new Color[perc.size()][perc.size()];
 
-    draw = new Draw();
+    draw = new Draw(String.format("%d x %<d Percolation Matrix.", perc.size()));
 
     // enable difffered drawing.
     draw.show(0);
@@ -36,8 +36,8 @@ public class PercolationVisualizer {
   public void draw(int wait) {
     final int n = perc.size();
 
-    draw.setXscale(0, (double) n + 2);
-    draw.setYscale(0, (double) n + 2);
+    draw.setXscale(0, (double) n);
+    draw.setYscale(0, (double) n);
 
     for (int j = 0; j < n; j++) {
       for (int i = 0; i < n; i++) {
@@ -66,13 +66,31 @@ public class PercolationVisualizer {
   // draw a cell
   private void draw_cell(int i, int j, Color color) {
     // canvas places 0,0 in bottom left, we want it in top left.
-    final double j_draw = ((double) perc.size() - j) + 1.5;
-    final double i_draw = ((double) i) + 1.5;
+    final double j_draw = ((double) perc.size() - (j + 0.5));
+    final double i_draw = ((double) i) + 0.5;
 
     draw.setPenColor(color);
     draw.filledSquare(i_draw, j_draw, 0.5);
     draw.setPenColor(Draw.BLACK);
     draw.square(i_draw, j_draw, 0.5);
+  }
+
+  public void wait(String message) {
+    draw.setPenColor(Draw.RED);
+    // draw the message in the bottom margin.
+    draw.text(((double) perc.size()) / 2, ((double) perc.size()) / -40.0, message);
+    draw.show();
+    wait_for_click();
+  }
+
+  public void wait_for_click() {
+    while(!draw.mousePressed()) {
+      try {
+      Thread.sleep(50);
+      } catch (InterruptedException ex) {
+        // nothing to see here.
+      }
+    }
   }
 
   public static void main(String[] args) {
@@ -84,32 +102,24 @@ public class PercolationVisualizer {
 
     viz.draw();
 
-    double draw_time = 0;
-    double open_time = 0;
-
     try {
-      while (!StdIn.isEmpty()) {
+      while (!StdIn.isEmpty() && !perc.percolates()) {
         // read integers from standard in
         int i = StdIn.readInt();
         int j = StdIn.readInt();
 
-        Stopwatch open_sw = new Stopwatch();
         // open the cell
         perc.open(i,j);
-        open_time += open_sw.elapsedTime();
 
 
-        Stopwatch draw_sw = new Stopwatch();
         // draw the percolation matrix
         viz.draw();
-        draw_time += draw_sw.elapsedTime();
       }
     } catch (NoSuchElementException ex) {
       System.err.println("Unexpectantly Reached end of input while proccessing a cell");
     }
 
-    System.out.printf("open: %f%n", open_time);
-    System.out.printf("draw: %f%n", draw_time);
+    viz.wait("Click to close");
 
     System.exit(0);
 
