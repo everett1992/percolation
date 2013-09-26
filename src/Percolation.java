@@ -48,7 +48,7 @@ public class Percolation {
     }
 
     // Join the bottom row of cells to the virtual bottom
-    virt_bottom = num_cells - 1; // virt bottmo can be any cell from the bottom row of cells
+    virt_bottom = num_cells - 1; // virt bottom can be any cell from the bottom row of cells
     for (int i = 0; i < N; i++) {
       union.union(idx(i, N - 1), virt_bottom);
     }
