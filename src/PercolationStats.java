@@ -1,3 +1,4 @@
+import java.util.ListIterator;
 import java.util.LinkedList;
 import java.util.Collections;
 
@@ -20,14 +21,13 @@ public class PercolationStats {
   // Randomly open cells untill the matrix percolates
   // params n - size of the grid
   // returns the number of opened cells
-  public static int test(int n) {
+  public static int test(int n, ListIterator<int[]> cells) {
     Percolation perc = new Percolation(n); // initialize percolation matrix
-    LinkedList<int[]> cells = cells(n);    // generate list of random cells to open
 
     int opened_cells = 0;
 
     while (!perc.percolates()) {           // open cells untill the matrix percolates
-      int[] cell = cells.pop();
+      int[] cell = cells.next();
       perc.open(cell[0], cell[1]);
       opened_cells++;
 
@@ -60,9 +60,12 @@ public class PercolationStats {
 
     double[] opened_cells = new double[t];
 
+    LinkedList<int[]> cells = cells(n); // create an array of all cell coordinates
+
     // [1..t]
     for (int test = 0; test < t; test++) {
-      opened_cells[test] = ((double) test(n))/(Math.pow(n,2));
+      Collections.shuffle(cells); 
+      opened_cells[test] = ((double) test(n, cells.listIterator()))/(Math.pow(n,2));
 
     }
 
