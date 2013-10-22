@@ -17,7 +17,7 @@ public class Percolation {
 
 
   // Tracks which cells are connected
-  private QuickUnionUF union;
+  private QuickUnion union;
 
   // open cells are true, closed cells are false
   private boolean[][] cells;
@@ -28,12 +28,22 @@ public class Percolation {
   private final int size;
 
   // create N-by-N grid, with all sites blocked
-  public Percolation(int N) {
+  public Percolation(int N, Boolean... varargs) {
 
     // N will be doubled, so if n > sqrt(MAX_INT)
     // there would be an overflow.
     if (N > MAX_SIZE) {
       throw new RuntimeException(GRID_OVERSIZE_MESSAGE);
+    }
+
+    // I wish this were ruby
+    boolean path_compression;
+    if (varargs.length == 1) {
+      path_compression = varargs[0];
+    } else if (varargs.length == 0) {
+      path_compression = true;
+    } else {
+      throw new IllegalArgumentException("too many arguments");
     }
 
     cells = new boolean[N][N];
@@ -42,7 +52,11 @@ public class Percolation {
     // Create a union data structure with N^2 + 2 seperate groups
     // Cell second to last cell is the virtual top, and last cell is the virtual bottom
     int num_cells = (int)Math.pow(N, 2);
-    union = new QuickUnionUF(num_cells);
+    if (path_compression) {
+      union = new MyQuickUnionPathCompressionUF(num_cells);
+    } else {
+      union = new MyQuickUnionUF(num_cells);
+    }
 
     // Join the top row of cells to the virtual top
     virt_top = 0; // virt top can be any cell from the top row of cells
