@@ -25,8 +25,8 @@ public class PercolationTiming {
   public static int test(int n, ListIterator<int[]> cells) {
     return test(n, cells, true);
   }
-  public static int test(int n, ListIterator<int[]> cells, boolean path_compression) {
-    Percolation perc = new Percolation(n, path_compression); // initialize percolation matrix
+  public static int test(int n, ListIterator<int[]> cells, boolean weighted) {
+    Percolation perc = new Percolation(n, weighted); // initialize percolation matrix
 
     int opened_cells = 0;
 
@@ -44,13 +44,13 @@ public class PercolationTiming {
 
     HashMap<String, Boolean> map = new HashMap<String, Boolean>();
     map.put("QuickUnionUF", false);
-    map.put("QuickUnionPathCompressionUF", true);
+    map.put("WeightedQuickUnionUF", true);
 
     for (String type : map.keySet()) {
-      Boolean path_compression = map.get(type);
+      Boolean weighted = map.get(type);
       int n, t, max_n, max_t;
 
-      System.out.printf("%n---------- %s (path compression %s) ----------%n", type, (path_compression ? "true" : "false"));
+      System.out.printf("%n---------- %s (Weighted %s) ----------%n", type, (weighted ? "true" : "false"));
 
       n = (int) Math.pow(2,4); max_n = (int) Math.pow(2, 12); t = 200;
       System.out.printf("%s: doubling N from %d to %d with T = %d%n", type, n, max_n, t);
@@ -61,7 +61,7 @@ public class PercolationTiming {
 
         for (int test = 0; test < t; test++) {             // test t times
           Collections.shuffle(cells);
-          PercolationTiming.test(n, cells.listIterator(), path_compression);
+          PercolationTiming.test(n, cells.listIterator(), weighted);
         }
         System.out.printf("N: %5d, time: %f%n", n, sw.elapsedTime());
         n *= 2;                                            // double n
@@ -77,7 +77,7 @@ public class PercolationTiming {
 
         for (int test = 0; test < t; test++) {             // test t times
           Collections.shuffle(cells);
-          PercolationTiming.test(n, cells.listIterator(), path_compression);
+          PercolationTiming.test(n, cells.listIterator(), weighted);
         }
 
         System.out.printf("T: %5d, time: %f%n", t, sw.elapsedTime());

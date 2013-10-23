@@ -3,13 +3,13 @@
 //
 // wapper around the books QuickUnionPathCompressionUF
 // class so it can be used polymorphiclally
-public class MyQuickUnionPathCompressionUF implements QuickUnion {
+public class MyWeightedQuickUnionUF implements QuickUnion {
 
   // The Books QuickUnionPathCompressionUF
-  private QuickUnionPathCompressionUF qupcuf;
+  private WeightedQuickUnionUF qupcuf;
 
-  public MyQuickUnionPathCompressionUF(int N) {
-    qupcuf = new QuickUnionPathCompressionUF(N);
+  public MyWeightedQuickUnionUF(int N) {
+    qupcuf = new WeightedQuickUnionUF(N);
   }
   public int count() {
     return qupcuf.count();

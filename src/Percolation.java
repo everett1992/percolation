@@ -37,11 +37,11 @@ public class Percolation {
     }
 
     // I wish this were ruby
-    boolean path_compression;
+    boolean weighted;
     if (varargs.length == 1) {
-      path_compression = varargs[0];
+      weighted = varargs[0];
     } else if (varargs.length == 0) {
-      path_compression = true;
+      weighted = true;
     } else {
       throw new IllegalArgumentException("too many arguments");
     }
@@ -52,8 +52,8 @@ public class Percolation {
     // Create a union data structure with N^2 + 2 seperate groups
     // Cell second to last cell is the virtual top, and last cell is the virtual bottom
     int num_cells = (int)Math.pow(N, 2);
-    if (path_compression) {
-      union = new MyQuickUnionPathCompressionUF(num_cells);
+    if (weighted) {
+      union = new MyWeightedQuickUnionUF(num_cells);
     } else {
       union = new MyQuickUnionUF(num_cells);
     }
