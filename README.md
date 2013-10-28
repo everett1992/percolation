@@ -47,6 +47,7 @@ for the visualizer, replace <N> with any number.
 
 ### Percolation Stats:
 To view the statistsics run this, wher n is the size of the grid, and t is the number of test to run.
+
 ```
   $ ant stats -Dn=250 -Dt=20
 ```
@@ -60,64 +61,56 @@ This takes a while to run. A sample output is included below in the `Analysis` s
 ```
 
 ## Analysis
+Output of PercolationTiming.java, `ant timing`
+This data is representd in `timing.odt` along side charts.
 
-Doubling N quadruples the number of cells (N x N) / (N*2 x N*2) = 4
-So I would expect exponential growth when N doubles.
-The data does not support this and I expect it is becuase small N's
-are erratic and more likely to percolate with less than P percent of
-spaces open.
+Doubling t from 16 to 4096 with n = 200
 
-Buildfile: /home/caleb/workspace/percolation/build.xml
+   t |  weighted | unweighted |
+----:| ---------:| ----------:|
+  16 |     0.047 |      0.062 |
+  32 |     0.089 |      0.141 |
+  64 |     0.181 |      0.275 |
+ 128 |     0.366 |      0.563 |
+ 256 |     0.740 |      1.138 |
+ 512 |     1.500 |      2.273 |
+1024 |     3.164 |      4.456 |
+2048 |     6.274 |      9.154 |
+4096 |    12.613 |     18.229 |
+T(t) | ~0.00308t |   0.00445t |
 
-compile:
+The relationship between t and the time complexty is clearly linear, which makes sence,
+the variavle `t` is only used in an outer `for` loop.
 
-timing:
-     [java] 
-     [java] ---------- WeightedQuickUnionUF (Weighted true) ----------
-     [java] WeightedQuickUnionUF: doubling N from 16 to 4096 with T = 200
-     [java] N:    16, time: 0.031000
-     [java] N:    32, time: 0.027000
-     [java] N:    64, time: 0.050000
-     [java] N:   128, time: 0.215000
-     [java] N:   256, time: 1.119000
-     [java] N:   512, time: 7.284000
-     [java] N:  1024, time: 34.414000
-     [java] N:  2048, time: 198.708000
-     [java] N:  4096, time: 1340.113000
-     [java] --
-     [java] WeightedQuickUnionUF: doubling T from 16 to 4096 with N = 200
-     [java] T:    16, time: 0.047000
-     [java] T:    32, time: 0.089000
-     [java] T:    64, time: 0.181000
-     [java] T:   128, time: 0.366000
-     [java] T:   256, time: 0.740000
-     [java] T:   512, time: 1.500000
-     [java] T:  1024, time: 3.164000
-     [java] T:  2048, time: 6.274000
-     [java] T:  4096, time: 12.613000
-     [java] 
-     [java] ---------- QuickUnionUF (Weighted false) ----------
-     [java] QuickUnionUF: doubling N from 16 to 4096 with T = 200
-     [java] N:    16, time: 0.026000
-     [java] N:    32, time: 0.032000
-     [java] N:    64, time: 0.078000
-     [java] N:   128, time: 0.296000
-     [java] N:   256, time: 1.833000
-     [java] N:   512, time: 14.853000
-     [java] N:  1024, time: 115.355000
-     [java] N:  2048, time: 1054.344000
-     [java] N:  4096, time: 10157.954000
-     [java] --
-     [java] QuickUnionUF: doubling T from 16 to 4096 with N = 200
-     [java] T:    16, time: 0.062000
-     [java] T:    32, time: 0.141000
-     [java] T:    64, time: 0.275000
-     [java] T:   128, time: 0.563000
-     [java] T:   256, time: 1.138000
-     [java] T:   512, time: 2.273000
-     [java] T:  1024, time: 4.456000
-     [java] T:  2048, time: 9.154000
-     [java] T:  4096, time: 18.229000
+`T(n, t) = t * t(n)`
 
-BUILD SUCCESSFUL
-Total time: 216 minutes 34 seconds
+Doubling n from 16 to 4096 with t = 200
+
+   n | weighted | unweighted |
+----:| --------:| ----------:|
+  16 |    0.031 |      0.026 |
+  32 |    0.027 |      0.032 |
+  64 |    0.050 |      0.078 |
+ 128 |    0.215 |      0.296 |
+ 256 |    1.119 |      1.833 |
+ 512 |    7.284 |     14.853 |
+1024 |   34.414 |    115.355 |
+2048 |  198.708 |   1054.344 |
+4096 | 1340.113 |  10157.954 |
+T(n) |          |            |
+
+weighted
+  T(16) = 0.026
+  T(32) = 1.23 * T(n/2)
+  T(64) = 2.43 * T(n/2)
+ T(128) = 3.79 * T(n/2)
+ T(256) = 6.19 * T(n/2)
+ T(512) = 8.10 * T(n/2)
+T(1024) = 7.76 * T(n/2)
+T(2048) = 9.13 * T(n/2)
+T(4096) = 9.63 * T(n/2)
+
+// Unweighted
+1.82109x10^-7 x^3-0.000160553 x^2+0.083614 x-5.50897
+// Weighted
+1.63403x10^-8 x^3+0.0000119158 x^2+0.00430624 x-0.345488
