@@ -52,7 +52,7 @@ public class PercolationTiming {
 
       System.out.printf("%n---------- %s (Weighted %s) ----------%n", type, (weighted ? "true" : "false"));
 
-      n = (int) Math.pow(2,4); max_n = (int) Math.pow(2, 12); t = 200;
+      n = (int) Math.pow(2,4); max_n = (int) Math.pow(2, 12); t = 1;
       System.out.printf("%s: doubling N from %d to %d with T = %d%n", type, n, max_n, t);
       while (n <= max_n) {
         cells = cells(n); // create an array of all cell coordinates

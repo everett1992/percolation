@@ -3,12 +3,20 @@ Algorithms Project 1
 Caleb Everett
 TCNJ Fall 2013
 
+This document is a markdown file, and can be found online at https://gist.github.com/everett1992/7257667
+
 This project includes an Ant build file, I've included instructions on how to use ant to build and
 run the different parts of this project. If you do not have, or do not want to use Ant you should be able to
 compile using `javac`, just make sure the jars in `./lib` are included in the java classpath.
 
 The main method for the vizualizer is in `src/PercolationVisualizer.java`, and the main method
 for the statistics is in `src/PercolationStats.java`.
+
+## System Requirements
+Tested with:
+- Java 1.7.0_45
+- Ant 1.9.2
+- Ruby 2.0.0 (optional)
 
 ## contents
 build.xml:
@@ -17,6 +25,10 @@ desc.pdf:
   The project specs by mm
 README.md:
   This document
+vis_input.rb:
+  Ruby script to generate visuzliser input
+vis_input.txt:
+  Pregenerated input for visualizer
 timing.txt:
   scratch work for figuring the time complexities
 timing.ods:
@@ -77,29 +89,28 @@ Doubling t from 16 to 4096 with n = 200
 1024 |     3.164 |      4.456 |
 2048 |     6.274 |      9.154 |
 4096 |    12.613 |     18.229 |
-T(t) | ~0.00308t |   0.00445t |
 
 The relationship between t and the time complexty is clearly linear, which makes sence,
 the variavle `t` is only used in an outer `for` loop.
 
-`T(n, t) = t * t(n)`
+`T(n, t) = t * T(n)`
 
-Doubling n from 16 to 4096 with t = 200
+Doubling n from 16 to 4096 with t = 1
 
    n | weighted | unweighted |
 ----:| --------:| ----------:|
-  16 |    0.031 |      0.026 |
-  32 |    0.027 |      0.032 |
-  64 |    0.050 |      0.078 |
- 128 |    0.215 |      0.296 |
- 256 |    1.119 |      1.833 |
- 512 |    7.284 |     14.853 |
-1024 |   34.414 |    115.355 |
-2048 |  198.708 |   1054.344 |
-4096 | 1340.113 |  10157.954 |
+  16 |    0.002 |      0.002 |
+  32 |    0.002 |      0.002 |
+  64 |    0.009 |      0.004 |
+ 128 |    0.006 |      0.018 |
+ 256 |    0.019 |      0.015 |
+ 512 |    0.048 |      0.064 |
+1024 |    0.406 |      0.502 |
+2048 |    2.035 |      5.952 |
+4096 |    7.375 |     46.447 |
 
-// Unweighted
-1.82109n10^-7 n^3-0.000160553 n^2+0.083614 n-5.50897
-T(n, t) = (1.63403 * 10^ - 8 n^3 + 0.0000119158 * n^2 + 0.00430624 * n - 0.345488) / 0.00445(200) * 0.00445(t)
-// Weighted
-T(n, t) = (1.63403 * 10^-8 * n^3 + 0.0000119158 * n^2 + 0.00430624 * n - 0.345488) / 0.00308(200) * 0.00308(t)
+// QuickUnionUF
+`T(n, t) = t * (2 x 10 ^ -12) * (n ^ 3 * log(n))`
+
+// WeightedQuickUnionUF
+`T(n, t) = t * (5 x 10 ^ -7) * n ^ 2`
