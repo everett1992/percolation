@@ -20,7 +20,9 @@
 
   <target name="compile">
     <mkdir dir="${build.dir}"/>
-    <javac 
+    <javac
+      target="1.7"
+      source="1.7"
       includeantruntime="true"
       srcdir="${src.dir}"
       destdir="${build.dir}"
